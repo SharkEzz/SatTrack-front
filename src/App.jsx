@@ -14,8 +14,8 @@ function App() {
     navigator.geolocation.getCurrentPosition((pos) => {
       const { coords } = pos;
       setCurrentLocation({
-        lat: coords.latitude.toFixed(6),
-        lng: coords.longitude.toFixed(6)
+        lat: coords.latitude.toFixed(4),
+        lng: coords.longitude.toFixed(4)
       });
     });
   }, []);
@@ -64,60 +64,62 @@ function App() {
           <Button onClick={handleRefreshCurrentTracking}>&#128472;</Button>
         </Row>
         <Row md={12}>
-          <Card className="w-100">
-            <Card.Header>
-              <Row className="justify-content-between align-items-center px-3">
-                <span>Selection satellite</span>
-                <Button variant="primary" size="sm" onClick={getUserGeolocation}>Me géolocaliser</Button>  
-              </Row>
-            </Card.Header>
-            <Card.Body>
-            
-            <Form onSubmit={handleSubmit}>
-              <Form.Group>
-                <Form.Label htmlFor="satSelect">Satellites visibles</Form.Label>
-                <Form.Control id="satSelect" name="satSelect" as="select" defaultValue={currentTracking?.id}>
-                  {satellites.map((sat) => (
-                    <option key={sat.id} value={sat.id}>{sat.name}</option>
-                  ))}
-                </Form.Control>
-              </Form.Group>
-                
-              <Row>
-                <Col>
-                  <Form.Group>
-                    <Form.Label htmlFor="lat">Latitude</Form.Label>
-                    <Form.Control type="number" step=".00000000001" id="lat" name="lat" placeholder="latitude" defaultValue={currentLocation?.lat ?? selectedPosition?.lat}></Form.Control>
-                  </Form.Group>
-                </Col>
-                <Col>
-                  <Form.Group>
-                    <Form.Label htmlFor="lng">Longitude</Form.Label>
-                    <Form.Control type="number" step=".00000000001" id="lng" name="lng" placeholder="longitude" defaultValue={currentLocation?.lng ?? selectedPosition?.lng}></Form.Control>
-                  </Form.Group>
-                </Col>
-                <Col>
-                  <Form.Group>
-                    <Form.Label htmlFor="elev">Élevation</Form.Label>
-                    <InputGroup>
-                      <Form.Control type="number" step=".00000000001" id="elev" name="elev" placeholder="elevation" defaultValue={selectedPosition?.alt}></Form.Control>
-                      <InputGroup.Append>
-                        <InputGroup.Text>mètres</InputGroup.Text>
-                      </InputGroup.Append>
-                    </InputGroup>
+          <Col>
+            <Card className="w-100">
+              <Card.Header>
+                <Row className="justify-content-between align-items-center px-3">
+                  <span>Selection satellite</span>
+                  <Button variant="primary" size="sm" onClick={getUserGeolocation}>Me géolocaliser</Button>  
+                </Row>
+              </Card.Header>
+              <Card.Body>
+              
+              <Form onSubmit={handleSubmit}>
+                <Form.Group>
+                  <Form.Label htmlFor="satSelect">Satellites visibles</Form.Label>
+                  <Form.Control id="satSelect" name="satSelect" as="select" defaultValue={currentTracking?.id}>
+                    {satellites.map((sat) => (
+                      <option key={sat.id} value={sat.id}>{sat.name}</option>
+                    ))}
+                  </Form.Control>
+                </Form.Group>
+                  
+                <Row>
+                  <Col md={4} sm={12}>
+                    <Form.Group>
+                      <Form.Label htmlFor="lat">Latitude actuelle</Form.Label>
+                      <Form.Control type="number" step=".0001" id="lat" name="lat" placeholder="latitude" defaultValue={currentLocation?.lat ?? selectedPosition?.lat}></Form.Control>
+                    </Form.Group>
+                  </Col>
+                  <Col md={4} sm={12}>
+                    <Form.Group>
+                      <Form.Label htmlFor="lng">Longitude actuelle</Form.Label>
+                      <Form.Control type="number" step=".0001" id="lng" name="lng" placeholder="longitude" defaultValue={currentLocation?.lng ?? selectedPosition?.lng}></Form.Control>
+                    </Form.Group>
+                  </Col>
+                  <Col md={4} sm={12}>
+                    <Form.Group>
+                      <Form.Label htmlFor="elev">Altitude actuelle</Form.Label>
+                      <InputGroup>
+                        <Form.Control type="number" step=".00000000001" id="elev" name="elev" placeholder="elevation" defaultValue={selectedPosition?.alt}></Form.Control>
+                        <InputGroup.Append>
+                          <InputGroup.Text>mètres</InputGroup.Text>
+                        </InputGroup.Append>
+                      </InputGroup>
 
-                  </Form.Group>
-                </Col>
-              </Row>
-               
-              <Row>
-                {/* TODO : Le bouton "lancer suivi" devient arrêter suivi si le suivi est lancé et inversement */}
-                <Button type="submit" className="mt-3 mx-auto" variant="success">Lancer suivi</Button>
-                <Button type="submit" className="mt-3 mx-auto" variant="danger">Arrêter suivi</Button>
-              </Row>
-            </Form>
-            </Card.Body>
-          </Card>
+                    </Form.Group>
+                  </Col>
+                </Row>
+                
+                <Row>
+                  {/* TODO : Le bouton "lancer suivi" devient arrêter suivi si le suivi est lancé et inversement */}
+                  <Button type="submit" className="mt-3 mx-auto" variant="success">Lancer suivi</Button>
+                  <Button type="submit" className="mt-3 mx-auto" variant="danger">Arrêter suivi</Button>
+                </Row>
+              </Form>
+              </Card.Body>
+            </Card>
+          </Col>
         </Row>
         <Row className="mt-3">
           <Col md={4} sm={12}>
@@ -148,36 +150,6 @@ function App() {
             </Card>
           </Col>
           <Col md={8} sm={12}>
-            <Card className="w-100 mb-3">
-              <Card.Header>
-                Satellites visibles
-              </Card.Header>
-              <Card.Body>
-                <Table striped>
-                    <thead>
-                      <th>Nom</th>
-                      <th>Latitude</th>
-                      <th>Longitude</th>
-                      <th>Actions</th>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>OUi</td>
-                        <td>OUi</td>
-                        <td>OUi</td>
-                        <td>
-                          <Button className="mr-2" variant="info" size="sm">
-                            Suivre
-                          </Button>
-                          <Button variant="danger" size="sm">
-                            Supprimer
-                          </Button>
-                        </td>
-                      </tr>
-                    </tbody>
-                </Table>
-              </Card.Body>
-            </Card>
             <Card className="w-100">
               <Card.Header>
                 Tous les satellites
@@ -185,9 +157,11 @@ function App() {
               <Card.Body>
                 <Table striped>
                     <thead>
-                      <th>Nom</th>
-                      <th>Ajouté le</th>
-                      <th>Actions</th>
+                      <tr>
+                        <th>Nom</th>
+                        <th>Ajouté le</th>
+                        <th>Actions</th>
+                      </tr>
                     </thead>
                     <tbody>
                       <tr>

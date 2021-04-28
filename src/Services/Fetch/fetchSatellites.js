@@ -1,12 +1,14 @@
+const fakeSatellites = [
+    {id: 1, name: 'NOAA 19'},
+    {id: 2, name: 'Meteor M-2'}
+];
+
 const fetchSatellites = {
     getCurrentTracking: () => {
-        return Promise.resolve({id: 1, name: 'NOAA 19'})
+        return Promise.resolve(fakeSatellites[0])
     },
     getVisibleSatellites: () => {
-        return Promise.resolve([
-            {id: 1, name: 'NOAA 19'},
-            {id: 2, name: 'Meteor M-2'}
-        ])
+        return Promise.resolve(fakeSatellites)
     },
     getCurrentSelectedPosition: () => {
         return Promise.resolve(
