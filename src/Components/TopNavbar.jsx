@@ -3,7 +3,7 @@ import { Navbar, Nav, NavDropdown, Form, Button, FormControl } from 'react-boots
 
 const TopNavbar = () => (
     <Navbar bg="dark" variant="dark" expand="lg">
-        <Navbar.Brand href="#">Track</Navbar.Brand>
+        <Navbar.Brand href="#">SatTrack</Navbar.Brand>
     </Navbar>
 );
 
