@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 import fetchSatellites from '../Services/Fetch/fetchSatellites';
 
 const useSatellites = () => {
@@ -7,6 +7,7 @@ const useSatellites = () => {
     const [savedLocation, setSavedLocation] = useState();
     const [currentLocation, setCurrentLocation] = useState();
     const [isTracking, setIsTracking] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     const getUserGeolocation = useCallback((setFieldValue) => {
         navigator.geolocation.getCurrentPosition((pos) => {
@@ -20,13 +21,13 @@ const useSatellites = () => {
         });
     }, []);
 
-    const saveLocation = ({ lat, lng, elev }) => {
+    const saveLocation = useCallback(({ lat, lng, elev }) => {
         setSavedLocation({
             lat,
             lng,
             elev
         });
-    };
+    }, []);
     
     const refreshVisibleSatellites = useCallback(() => {
         return fetchSatellites
@@ -47,34 +48,28 @@ const useSatellites = () => {
     }, []);
     
     useEffect(() => {
-        refreshVisibleSatellites();
-        refreshSelectedPosition();
-        refreshCurrentTracking();
-    }, []);
+        (async () => {
+            await refreshVisibleSatellites();
+            await refreshSelectedPosition();
+            await refreshCurrentTracking();
+            setIsLoaded(true);
+        })()
+    }, [refreshCurrentTracking, refreshSelectedPosition, refreshVisibleSatellites, setIsLoaded]);
 
-    return useMemo(() => ({
+    return {
+        currentLocation,
         currentTracking,
+        satellites,
+        savedLocation,
+        isTracking,
+        isLoaded,
         getUserGeolocation,
+        saveLocation,
         refreshVisibleSatellites,
         refreshSelectedPosition,
         refreshCurrentTracking,
-        satellites,
-        savedLocation,
-        currentLocation,
-        saveLocation,
-        isTracking
-    }), [
-        currentTracking,
-        getUserGeolocation,
-        refreshVisibleSatellites,
-        refreshSelectedPosition,
-        refreshCurrentTracking,
-        satellites,
-        savedLocation,
-        currentLocation,
-        saveLocation,
-        isTracking
-    ]);
+        setIsTracking,
+    }
 }
 
 export default useSatellites;

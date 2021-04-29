@@ -21,18 +21,20 @@ const SatellitesView = ({ satellites }) => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>OUi</td>
-                <td>20/04/2021</td>
-                <td>
-                  <Button onClick={() => setModalOpen(true)} className="mr-2" variant="info" size="sm">
-                    Edit TLE
-                  </Button>
-                  <Button variant="danger" size="sm">
-                    Delete
-                  </Button>
-                </td>
-              </tr>
+              {satellites.map((satellite, index) => (
+                <tr key={index}>
+                  <td>{satellite.name}</td>
+                  <td>{satellite.createdAt}</td>
+                  <td>
+                    <Button onClick={() => setModalOpen(true)} className="mr-2" variant="info" size="sm">
+                      Edit TLE
+                    </Button>
+                    <Button variant="danger" size="sm">
+                      Delete
+                    </Button>
+                  </td>
+                </tr> 
+              ))}
             </tbody>
           </Table>
         </Card.Body>

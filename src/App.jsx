@@ -6,12 +6,15 @@ import { TrackingForm, TrackingView, TopNavbar, SatellitesView } from './Compone
 function App() {
 
   const {
+    // Attributes
     currentTracking,
     satellites,
     currentLocation,
     savedPosition,
     isTracking,
+    isLoaded,
 
+    // Methods
     getUserGeolocation,
     refreshVisibleSatellites,
     refreshSelectedPosition,
@@ -33,7 +36,7 @@ function App() {
         </Row>
         <Row className="mt-3">
           <Col md={4} sm={12}>
-            <TrackingView currentTracking={currentTracking} />
+            {currentTracking ? <TrackingView currentTracking={currentTracking} /> : <p>No tracking</p>}
           </Col>
           <Col md={8} sm={12}>
             <SatellitesView satellites={satellites} />

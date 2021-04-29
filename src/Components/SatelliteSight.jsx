@@ -62,7 +62,7 @@ const SatelliteSight = ({ azimuth, elevation, satelliteName }) => {
             ctx.moveTo(15, centerY);
             ctx.lineTo(width - offset, centerY);
             ctx.stroke();
-            ctx.fillStyle = '#000000';
+            ctx.fillStyle = '#00000099';
             ctx.beginPath();
             ctx.fillText('N', centerX - 4, offset - 5);
             ctx.beginPath();
