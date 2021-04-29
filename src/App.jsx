@@ -1,7 +1,7 @@
 import React from 'react'
 import { Row, Container, Col } from 'react-bootstrap';
 import useSatellites from './Hooks/useSatellites';
-import {TrackingForm, TrackingView, TopNavbar, SatellitesView} from './Components/';
+import { TrackingForm, TrackingView, TopNavbar, SatellitesView } from './Components/';
 
 function App() {
 
