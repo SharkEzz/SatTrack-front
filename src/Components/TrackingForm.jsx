@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Formik } from 'formik';
 import { Card, Row, Col, Button, InputGroup, Form } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 const TrackingForm = ({ satellites, isTracking, getUserGeolocation, onSubmit }) => {
 
@@ -96,7 +97,7 @@ const TrackingForm = ({ satellites, isTracking, getUserGeolocation, onSubmit }) 
                                     <Button type="button" onClick={() => console.log('stop track')} className="mt-3 mx-auto" variant="danger" disabled={isSubmitting}>Arrêter suivi</Button> :
                                     <Button type="submit" className="mt-3 mx-auto" variant="success" disabled={isSubmitting}>Lancer suivi</Button>
                                 }
-                                {error && <Text className="text-danger">{error}</Text>}
+                                {error && <span className="text-danger">{error}</span>}
                             </Row>
                         </Form>
                     </Card.Body>
@@ -104,6 +105,13 @@ const TrackingForm = ({ satellites, isTracking, getUserGeolocation, onSubmit }) 
             )}
         </Formik>
     );
+};
+
+TrackingForm.propTypes = {
+    satellites: PropTypes.array.isRequired,
+    isTracking: PropTypes.bool.isRequired,
+    getUserGeolocation: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired
 };
 
 export default TrackingForm;

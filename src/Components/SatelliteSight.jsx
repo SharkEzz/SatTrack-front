@@ -1,9 +1,14 @@
 import React, { useCallback, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 
 const SatelliteSight = ({ azimuth, elevation }) => {
     const canvasRef = useRef(null);
 
     const azel_to_xy = (centerX, centerY, radius, azimuth, elevation) => {
+
+        if(azimuth < 0 || elevation < 0)
+            throw new Error('Invalid azimuth or elevation');
+
         // Convert to radian
         const az = azimuth * Math.PI / 180;
         const el = elevation * Math.PI / 180;
@@ -77,7 +82,7 @@ const SatelliteSight = ({ azimuth, elevation }) => {
         {
             draw(canvasRef.current);
         }
-    }, [canvasRef]);
+    }, [canvasRef, azimuth, elevation, draw]);
 
     return (
         <div className="w-100">
@@ -85,5 +90,10 @@ const SatelliteSight = ({ azimuth, elevation }) => {
         </div>
     );
 };
+
+SatelliteSight.propTypes = {
+    azimuth: PropTypes.number.isRequired,
+    elevation: PropTypes.number.isRequired
+}
 
 export default SatelliteSight;

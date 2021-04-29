@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Button, Table, Modal, FormControl, Badge } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 const SatellitesView = ({ satellites }) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -8,14 +9,14 @@ const SatellitesView = ({ satellites }) => {
     <>
       <Card className="w-100">
         <Card.Header>
-          Tous les satellites
+          Added satellites
             </Card.Header>
         <Card.Body>
           <Table striped>
             <thead>
               <tr>
-                <th>Nom</th>
-                <th>Ajouté le</th>
+                <th>Name</th>
+                <th>Added at</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -25,10 +26,10 @@ const SatellitesView = ({ satellites }) => {
                 <td>20/04/2021</td>
                 <td>
                   <Button onClick={() => setModalOpen(true)} className="mr-2" variant="info" size="sm">
-                    Editer TLE
+                    Edit TLE
                   </Button>
                   <Button variant="danger" size="sm">
-                    Supprimer
+                    Delete
                   </Button>
                 </td>
               </tr>
@@ -51,5 +52,9 @@ const SatellitesView = ({ satellites }) => {
     
   )
 };
+
+SatellitesView.propTypes = {
+  satellites: PropTypes.array.isRequired
+}
 
 export default SatellitesView;
