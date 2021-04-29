@@ -1,5 +1,6 @@
 import React from 'react';
-import { Card, Row, Container, Col, Button, Badge, Table, InputGroup, Form } from 'react-bootstrap';
+import { Card, Row, Col, Badge } from 'react-bootstrap';
+import SatelliteSight from './SatelliteSight';
 
 const TrackingView = ({currentTracking}) => {
 
@@ -26,6 +27,11 @@ const TrackingView = ({currentTracking}) => {
                 <p>Vélocité : <Badge variant="warning">400 Km/h</Badge></p>
               </Col>
               {/* TODO : mettre un cercle avec la position du satellite caractérisé par un point ? Permet de voir si le tracking de l'antenne à du sens */}
+            </Row>
+            <Row>
+              <Col>
+                <SatelliteSight azimuth={203.62} elevation={29.09} />
+              </Col>
             </Row>
           </Card.Body>
         </Card>
