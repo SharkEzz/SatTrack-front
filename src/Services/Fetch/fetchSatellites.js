@@ -15,7 +15,7 @@ const fetchSatellites = {
         }).then((res) => res.json()),
     deleteSatellite: (id) => fetch(`${API_URL}/satellites/${id}`, {
             method: 'DELETE'
-        }).then((res) => res.json()),
+        }),
     
         
     getCurrentTracking: () => fetch(`${API_URL}/current_tracking`).then(res => res.json()).then(sats => sats.satellite),

@@ -7,12 +7,11 @@ const useSatellites = () => {
     const [visibleSatellites, setVisibleSatellites] = useState([]);
     const [currentLocation, setCurrentLocation] = useState();
     const [savedLocation, setSavedLocation] = useState();
-    const [isTracking, setIsTracking] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
 
     const editSavedLocation = useCallback(({lat, lng, alt}) => {
         return fetchSatellites.setCurrentSelectedPosition({lat, lng, alt}).then((res) => {
-            console.log('location', res);
+            setSavedLocation({lat, lng, alt});
         }).catch(() => {
             throw new Error('Cannot set current location');
         })
@@ -22,7 +21,7 @@ const useSatellites = () => {
         return fetchSatellites.setCurrentTracking(id).then(({satellite}) => {
             setCurrentTracking(satellite);
         }).catch(() => {
-            throw new Error('Cannot set current location');
+            throw new Error('Cannot track this satellite');
         })
     }, []);
 
@@ -34,10 +33,30 @@ const useSatellites = () => {
 
     const editSatellite = useCallback(({id, tle}) => {
         fetchSatellites.editSatellite(id, tle).then((sat) => {
-            console.log(sat);
+            setSatellites((satellites) => satellites.map((s) => s.id !== id ? s : sat));
         }).catch(() => {
-            throw new Error('Cannot set satellite');
+            throw new Error('Cannot edit satellite');
         })
+    }, []);
+
+    const deleteSatellite = useCallback((id) => {
+        return fetchSatellites.deleteSatellite(id)
+            .then(() => {
+                setSatellites((satellites) => satellites.filter((sat) => sat.id !== id));
+            }).catch((e) => {
+                throw new Error('Cannot delete this satellite');
+            });
+    }, []);
+
+    const addSatellite = useCallback((tle) => {
+        return fetchSatellites.addSatellite(tle)
+            .then((sat) => {
+                console.log(sat);
+                setSatellites((satellites) => [...satellites, sat]);
+            })
+            .catch(() => {
+                throw new Error("An error as occured !")
+            })
     }, []);
 
     const getUserGeolocation = useCallback((setFieldValue) => {
@@ -104,32 +123,34 @@ const useSatellites = () => {
         currentTracking,
         visibleSatellites,
         savedLocation,
-        isTracking,
         isLoaded,
         getUserGeolocation,
         saveLocation,
         refreshVisibleSatellites,
         refreshSelectedPosition,
         refreshCurrentTracking,
-        setIsTracking,
         editTracking,
         editCurrentTracking,
-        satellites
+        satellites,
+        editSatellite,
+        deleteSatellite,
+        addSatellite
     }), [currentLocation,
         currentTracking,
         getUserGeolocation,
         isLoaded,
-        isTracking,
         refreshCurrentTracking,
         refreshSelectedPosition,
         refreshVisibleSatellites,
         visibleSatellites,
         saveLocation,
         savedLocation,
-        setIsTracking,
         editTracking,
         editCurrentTracking,
-        satellites
+        satellites,
+        editSatellite,
+        deleteSatellite,
+        addSatellite
     ]);
 }
 

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { Row, Container, Col } from 'react-bootstrap';
 import useSatellites from './Hooks/useSatellites';
 import { TrackingForm, TrackingView, TopNavbar, SatellitesView } from './Components/';
@@ -11,38 +11,40 @@ function App() {
     // Attributes
     currentTracking,
     visibleSatellites,
-    currentLocation,
-    savedPosition,
-    isTracking,
-    isLoaded,
     satellites,
 
     // Methods
     getUserGeolocation,
     refreshVisibleSatellites,
-    refreshSelectedPosition,
     refreshCurrentTracking,
-    setIsTracking,
     editTracking,
-    editCurrentTracking
+    editCurrentTracking,
+    editSatellite,
+    deleteSatellite,
+    addSatellite
   } = useSatellites();
 
-  const setTrackingAutoRefresh = (enabled = false) => {
-    if(enabled && refreshTrackingInterval === null)
+  const setTrackingAutoRefresh = useCallback((enabled) => {
+    if(enabled)
     {
-      setIsTracking(true);
       refreshTrackingInterval = setInterval(() => {
-        refreshCurrentTracking();
+        if(currentTracking)
+          refreshCurrentTracking();
+        refreshVisibleSatellites();
       }, 5000);
     }
-    else if(enabled === false && refreshTrackingInterval !== null)
+    else
     {
-      setIsTracking(false);
       clearInterval(refreshTrackingInterval);
       refreshTrackingInterval = null;
-      editCurrentTracking(null);
     }
-  };
+  }, [currentTracking, refreshCurrentTracking, refreshVisibleSatellites]);
+
+  useEffect(() => {
+    setTrackingAutoRefresh(true);
+
+    return () => setTrackingAutoRefresh(false);
+  }, [setTrackingAutoRefresh])
 
   return (
     <>
@@ -52,10 +54,10 @@ function App() {
           <Col>
             <TrackingForm 
               satellites={visibleSatellites} 
-              isTracking={isTracking}
+              isTracking={Boolean(currentTracking)}
               getUserGeolocation={getUserGeolocation}
+              onStopTracking={() => editCurrentTracking(null)}
               onSubmit={editTracking}
-              setTrackingAutoRefresh={setTrackingAutoRefresh}
               />
           </Col>
         </Row>
@@ -64,7 +66,12 @@ function App() {
             {currentTracking ? <TrackingView currentTracking={currentTracking} /> : <p>No tracking</p>}
           </Col>
           <Col md={8} sm={12}>
-            <SatellitesView satellites={satellites} />
+            <SatellitesView 
+              satellites={satellites} 
+              editSatellite={editSatellite} 
+              deleteSatellite={deleteSatellite}
+              addSatellite={addSatellite}
+              />
           </Col>
         </Row>
       </Container>

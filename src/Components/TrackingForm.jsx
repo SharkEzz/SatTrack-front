@@ -3,11 +3,10 @@ import { Formik } from 'formik';
 import { Card, Row, Col, Button, InputGroup, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-const TrackingForm = ({ satellites, isTracking, getUserGeolocation, onSubmit, setTrackingAutoRefresh }) => {
+const TrackingForm = ({ satellites, isTracking, getUserGeolocation, onSubmit, onStopTracking }) => {
     const [error, setError] = useState();
 
     const handleSubmit = ({ satSelect, lat, lng, elev }, { setSubmitting }) => {
-        setTrackingAutoRefresh(true);
         onSubmit({
             satelliteId: satSelect,
             location: {
@@ -95,7 +94,7 @@ const TrackingForm = ({ satellites, isTracking, getUserGeolocation, onSubmit, se
                             </Row>
                             <Row>
                                 {isTracking ?
-                                    <Button onClick={() => setTrackingAutoRefresh(false)} className="mt-3 mx-auto" variant="danger">Stop tracking</Button> :
+                                    <Button onClick={onStopTracking} className="mt-3 mx-auto" variant="danger">Stop tracking</Button> :
                                     <Button className="mt-3 mx-auto" onClick={submitForm} variant="success" disabled={isSubmitting || !isValid}>Start tracking</Button>
                                 }
                                 {error && <span className="text-danger">{error}</span>}
@@ -113,7 +112,7 @@ TrackingForm.propTypes = {
     isTracking: PropTypes.bool.isRequired,
     getUserGeolocation: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
-    setTrackingAutoRefresh: PropTypes.func.isRequired
+    onStopTracking: PropTypes.func.isRequired
 };
 
 export default TrackingForm;
