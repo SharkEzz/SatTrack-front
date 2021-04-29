@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
-const SatelliteSight = ({ azimuth, elevation }) => {
+const SatelliteSight = ({ azimuth, elevation, satelliteName }) => {
     const canvasRef = useRef(null);
 
     const azel_to_xy = (centerX, centerY, radius, azimuth, elevation) => {
@@ -71,11 +71,13 @@ const SatelliteSight = ({ azimuth, elevation }) => {
             ctx.fillText('E', width - offset + 5, centerY + 4);
             ctx.beginPath();
             ctx.fillText('W', 0, centerY + 4);
-            ctx.fillStyle = '#FF9900';
+            ctx.fillStyle = '#FF5500';
             ctx.beginPath();
             ctx.arc(x, y, 5, 0, 2 * Math.PI);
             ctx.fill();
-    }, [azimuth, elevation]);
+            ctx.beginPath();
+            ctx.fillText(satelliteName, x, y + 20);
+    }, [azimuth, elevation, satelliteName]);
 
     useEffect(() => {
         if(canvasRef.current)
@@ -93,7 +95,8 @@ const SatelliteSight = ({ azimuth, elevation }) => {
 
 SatelliteSight.propTypes = {
     azimuth: PropTypes.number.isRequired,
-    elevation: PropTypes.number.isRequired
+    elevation: PropTypes.number.isRequired,
+    satelliteName: PropTypes.string.isRequired
 }
 
 export default SatelliteSight;
