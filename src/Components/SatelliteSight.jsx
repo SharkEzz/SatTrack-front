@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 
 const SatelliteSight = ({ azimuth, elevation }) => {
     const canvasRef = useRef(null);
@@ -63,7 +63,7 @@ const SatelliteSight = ({ azimuth, elevation }) => {
             ctx.beginPath();
             ctx.fillText('S', centerX - 4, height - 1);
             ctx.beginPath();
-            ctx.fillText('E', width - offset + 4, centerY + 4);
+            ctx.fillText('E', width - offset + 5, centerY + 4);
             ctx.beginPath();
             ctx.fillText('W', 0, centerY + 4);
             ctx.fillStyle = '#FF9900';
@@ -81,8 +81,7 @@ const SatelliteSight = ({ azimuth, elevation }) => {
 
     return (
         <div className="w-100">
-            Position :
-            <canvas height="300" width="300" ref={canvasRef} />
+            <canvas className="mb-3" height="300" width="300" ref={canvasRef} />
         </div>
     );
 };
