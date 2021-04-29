@@ -25,23 +25,23 @@ const TrackingView = ({ currentTracking }) => {
       <Card.Body>
         <Row>
           <Col className="justify-content-center">
-            <SatelliteSight satelliteName={currentTracking.name} azimuth={203.62} elevation={29.09} />
+            <SatelliteSight satelliteName={currentTracking.name} azimuth={currentTracking.azimuth} elevation={currentTracking.elevation} />
           </Col>
         </Row>
         <Row>
           <Col>
-            <p>Elevation : <Badge variant={getElevationBadgeColorByElevationValue(4.888)}>{currentTracking.elevation} °</Badge></p>
+            <p>Elevation : <Badge variant={getElevationBadgeColorByElevationValue(4.888)}>{currentTracking.elevation.toFixed(2)} °</Badge></p>
           </Col>
           <Col>
-            <p>Azimuth : <Badge variant="secondary">{currentTracking.azimuth} °</Badge></p>
+            <p>Azimuth : <Badge variant="secondary">{currentTracking.azimuth.toFixed(2)} °</Badge></p>
           </Col>
         </Row>
         <Row>
           <Col>
-            <p>Altitude : <Badge variant="info">{currentTracking.altitude} km</Badge></p>
+            <p>Altitude : <Badge variant="info">{currentTracking.height.toFixed(0)} km</Badge></p>
           </Col>
           <Col>
-            <p>Velocity : <Badge variant="warning">{currentTracking.speed} km/s</Badge></p>
+            <p>Velocity : <Badge variant="warning">{currentTracking.velocity.toFixed(2)} km/s</Badge></p>
           </Col>
         </Row>
       </Card.Body>

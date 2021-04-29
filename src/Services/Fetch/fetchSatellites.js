@@ -1,24 +1,36 @@
-const fakeSatellites = [
-    {id: 1, name: 'NOAA 19', elevation: 10, azimuth: 25, speed: 800, altitude: 800},
-    {id: 2, name: 'Meteor M-2', elevation: 5.5, azimuth: 30, speed: 35000, altitude: 35000}
-];
+const API_URL = 'http://localhost:8080/api';
 
 const fetchSatellites = {
-    getCurrentTracking: () => {
-        return Promise.resolve(fakeSatellites[0])
-    },
-    getVisibleSatellites: () => {
-        return Promise.resolve(fakeSatellites)
-    },
-    getCurrentSelectedPosition: () => {
-        return Promise.resolve(
-            {
-                lat: 1,
-                lng: 1,
-                alt: 400
-            }
-        );
-    }
+    getSatellites: () => fetch(`${API_URL}/satellites`).then(res => res.json()),
+    getVisibleSatellites: () => fetch(`${API_URL}/visible_satellites`).then(res => res.json()),
+    addSatellite: (tle) => fetch(`${API_URL}/satellites`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({tle})
+        }).then((res) => res.json()),
+    editSatellite: (id, tle) => fetch(`${API_URL}/satellites/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({tle})
+        }).then((res) => res.json()),
+    deleteSatellite: (id) => fetch(`${API_URL}/satellites/${id}`, {
+            method: 'DELETE'
+        }).then((res) => res.json()),
+    
+        
+    getCurrentTracking: () => fetch(`${API_URL}/current_tracking`).then(res => res.json()).then(sats => sats.satellite),
+    setCurrentTracking: (satelliteId) => fetch(`${API_URL}/current_tracking`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({satelliteId})
+        }).then((res) => res.json()),
+
+    getCurrentSelectedPosition: () => fetch(`${API_URL}/user_location`).then(res => res.json()),
+    setCurrentSelectedPosition: ({lat, lng, alt}) => fetch(`${API_URL}/user_location`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({lat, lng, alt})
+        }).then((res) => res.json()),
 }
 
 

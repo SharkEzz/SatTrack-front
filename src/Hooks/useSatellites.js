@@ -1,13 +1,44 @@
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useMemo } from "react";
 import fetchSatellites from '../Services/Fetch/fetchSatellites';
 
 const useSatellites = () => {
     const [currentTracking, setCurrentTracking] = useState();
     const [satellites, setSatellites] = useState([]);
-    const [savedLocation, setSavedLocation] = useState();
+    const [visibleSatellites, setVisibleSatellites] = useState([]);
     const [currentLocation, setCurrentLocation] = useState();
+    const [savedLocation, setSavedLocation] = useState();
     const [isTracking, setIsTracking] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
+
+    const editSavedLocation = useCallback(({lat, lng, alt}) => {
+        return fetchSatellites.setCurrentSelectedPosition({lat, lng, alt}).then((res) => {
+            console.log('location', res);
+        }).catch(() => {
+            throw new Error('Cannot set current location');
+        })
+    }, []);
+
+    const editCurrentTracking = useCallback((id) => {
+        return fetchSatellites.setCurrentTracking(id).then(({satellite}) => {
+            setCurrentTracking(satellite);
+        }).catch(() => {
+            throw new Error('Cannot set current location');
+        })
+    }, []);
+
+    const editTracking = useCallback(({satelliteId, location: {lat, lng, alt}}) => {
+        return editSavedLocation({lat, lng, alt}).then(() => {
+            return editCurrentTracking(satelliteId);
+        })
+    }, [editCurrentTracking, editSavedLocation]);
+
+    const editSatellite = useCallback(({id, tle}) => {
+        fetchSatellites.editSatellite(id, tle).then((sat) => {
+            console.log(sat);
+        }).catch(() => {
+            throw new Error('Cannot set satellite');
+        })
+    }, []);
 
     const getUserGeolocation = useCallback((setFieldValue) => {
         navigator.geolocation.getCurrentPosition((pos) => {
@@ -32,7 +63,7 @@ const useSatellites = () => {
     const refreshVisibleSatellites = useCallback(() => {
         return fetchSatellites
             .getVisibleSatellites()
-            .then((sats) => setSatellites(sats));
+            .then((sats) => setVisibleSatellites(sats));
     }, []);
     
     const refreshSelectedPosition = useCallback(() => {
@@ -46,20 +77,32 @@ const useSatellites = () => {
             .getCurrentTracking()
             .then((sat) => setCurrentTracking(sat));
     }, []);
+
+    const refreshSatellites = useCallback(() => {
+        return fetchSatellites
+            .getSatellites().then((sats) => setSatellites(sats));
+    }, [])
     
     useEffect(() => {
         (async () => {
+            await refreshSatellites();
             await refreshVisibleSatellites();
             await refreshSelectedPosition();
             await refreshCurrentTracking();
             setIsLoaded(true);
         })()
-    }, [refreshCurrentTracking, refreshSelectedPosition, refreshVisibleSatellites, setIsLoaded]);
+    }, [
+        refreshSatellites,
+        refreshCurrentTracking,
+        refreshSelectedPosition,
+        refreshVisibleSatellites,
+        setIsLoaded
+    ]);
 
-    return {
+    return useMemo(() => ({
         currentLocation,
         currentTracking,
-        satellites,
+        visibleSatellites,
         savedLocation,
         isTracking,
         isLoaded,
@@ -69,7 +112,25 @@ const useSatellites = () => {
         refreshSelectedPosition,
         refreshCurrentTracking,
         setIsTracking,
-    }
+        editTracking,
+        editCurrentTracking,
+        satellites
+    }), [currentLocation,
+        currentTracking,
+        getUserGeolocation,
+        isLoaded,
+        isTracking,
+        refreshCurrentTracking,
+        refreshSelectedPosition,
+        refreshVisibleSatellites,
+        visibleSatellites,
+        saveLocation,
+        savedLocation,
+        setIsTracking,
+        editTracking,
+        editCurrentTracking,
+        satellites
+    ]);
 }
 
 export default useSatellites;

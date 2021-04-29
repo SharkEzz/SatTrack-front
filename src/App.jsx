@@ -1,25 +1,48 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Row, Container, Col } from 'react-bootstrap';
 import useSatellites from './Hooks/useSatellites';
 import { TrackingForm, TrackingView, TopNavbar, SatellitesView } from './Components/';
+
+let refreshTrackingInterval = null;
 
 function App() {
 
   const {
     // Attributes
     currentTracking,
-    satellites,
+    visibleSatellites,
     currentLocation,
     savedPosition,
     isTracking,
     isLoaded,
+    satellites,
 
     // Methods
     getUserGeolocation,
     refreshVisibleSatellites,
     refreshSelectedPosition,
-    refreshCurrentTracking
+    refreshCurrentTracking,
+    setIsTracking,
+    editTracking,
+    editCurrentTracking
   } = useSatellites();
+
+  const setTrackingAutoRefresh = (enabled = false) => {
+    if(enabled && refreshTrackingInterval === null)
+    {
+      setIsTracking(true);
+      refreshTrackingInterval = setInterval(() => {
+        refreshCurrentTracking();
+      }, 5000);
+    }
+    else if(enabled === false && refreshTrackingInterval !== null)
+    {
+      setIsTracking(false);
+      clearInterval(refreshTrackingInterval);
+      refreshTrackingInterval = null;
+      editCurrentTracking(null);
+    }
+  };
 
   return (
     <>
@@ -28,10 +51,12 @@ function App() {
         <Row md={12}>
           <Col>
             <TrackingForm 
-              satellites={satellites} 
+              satellites={visibleSatellites} 
               isTracking={isTracking}
               getUserGeolocation={getUserGeolocation}
-              onSubmit={() => Promise.resolve() /* TODO */} />
+              onSubmit={editTracking}
+              setTrackingAutoRefresh={setTrackingAutoRefresh}
+              />
           </Col>
         </Row>
         <Row className="mt-3">

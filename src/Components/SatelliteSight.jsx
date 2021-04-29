@@ -7,7 +7,10 @@ const SatelliteSight = ({ azimuth, elevation, satelliteName }) => {
     const azel_to_xy = (centerX, centerY, radius, azimuth, elevation) => {
 
         if(azimuth < 0 || elevation < 0)
-            throw new Error('Invalid azimuth or elevation');
+        {
+            azimuth = 0;
+            elevation = 0;
+        }
 
         // Convert to radian
         const az = azimuth * Math.PI / 180;
@@ -87,7 +90,7 @@ const SatelliteSight = ({ azimuth, elevation, satelliteName }) => {
     }, [canvasRef, azimuth, elevation, draw]);
 
     return (
-        <div className="w-100">
+        <div className="w-100 text-center">
             <canvas className="mb-3" height="300" width="300" ref={canvasRef} />
         </div>
     );
