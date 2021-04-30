@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Row, Col, Badge } from 'react-bootstrap';
-import SatelliteSight from './SatelliteSight';
+import PolarView from './PolarView';
 import PropTypes from 'prop-types';
 
 const TrackingView = ({ currentTracking }) => {
@@ -25,7 +25,7 @@ const TrackingView = ({ currentTracking }) => {
       <Card.Body>
         <Row>
           <Col className="justify-content-center">
-            <SatelliteSight satelliteName={currentTracking.name} azimuth={currentTracking.azimuth} elevation={currentTracking.elevation} />
+            <PolarView azimuth={currentTracking.azimuth} elevation={currentTracking.elevation} />
           </Col>
         </Row>
         <Row>

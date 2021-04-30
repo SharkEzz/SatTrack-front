@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react'
 import { Row, Container, Col } from 'react-bootstrap';
 import useSatellites from './Hooks/useSatellites';
-import { TrackingForm, TrackingView, TopNavbar, SatellitesView } from './Components/';
+import { TrackingForm, TrackingView, TopNavbar, SatellitesTable } from './Components/';
 
 let refreshTrackingInterval = null;
 
@@ -66,7 +66,7 @@ function App() {
             {currentTracking ? <TrackingView currentTracking={currentTracking} /> : <p>No tracking</p>}
           </Col>
           <Col md={8} sm={12}>
-            <SatellitesView 
+            <SatellitesTable 
               satellites={satellites} 
               editSatellite={editSatellite} 
               deleteSatellite={deleteSatellite}

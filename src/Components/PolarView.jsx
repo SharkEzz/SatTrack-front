@@ -1,53 +1,27 @@
 import React, { useCallback, useEffect, useRef } from 'react';
+import { azel_to_xy } from '../Libs/Math';
 import PropTypes from 'prop-types';
 
-const SatelliteSight = ({ azimuth, elevation, satelliteName }) => {
+const PolarView = ({ azimuth, elevation }) => {
     const canvasRef = useRef(null);
-
-    const azel_to_xy = (centerX, centerY, radius, azimuth, elevation) => {
-
-        if(azimuth < 0 || elevation < 0)
-        {
-            azimuth = 0;
-            elevation = 0;
-        }
-
-        // Convert to radian
-        const az = azimuth * Math.PI / 180;
-        const el = elevation * Math.PI / 180;
-
-        const rel = radius - (2 * radius * el) / Math.PI;
-
-        // Compute X and Y positions
-        const x = centerX + rel * Math.sin(az);
-        const y = centerY - rel * Math.cos(az);
-
-        return {
-            x,
-            y
-        }
-    };
     
-    const draw = useCallback(
-        /**
-         * @param {HTMLCanvasElement} canvas
-         */ 
-        (canvas) => {
+    const draw = useCallback((canvas) => {
             const ctx = canvas.getContext('2d');
             ctx.font = '12px sans-serif';
             const height = canvas.getBoundingClientRect().height;
             const width = canvas.getBoundingClientRect().width;
-            const centerX = canvas.getBoundingClientRect().width / 2;
-            const centerY = canvas.getBoundingClientRect().height / 2;
+            const centerX = width / 2;
+            const centerY = height / 2;
             const offset = 15;
             const circleRadius = width / 2 - offset;
 
             const { x, y } = azel_to_xy(centerX, centerY, circleRadius, azimuth, elevation);
 
-            ctx.clearRect(0, 0, canvas.getBoundingClientRect().width, canvas.getBoundingClientRect().height);
+            ctx.clearRect(0, 0, width, height);
 
             ctx.strokeStyle = '#00000066'
 
+            // Draw circles
             ctx.beginPath();
             ctx.arc(centerX, centerY, circleRadius, 0, 2 * Math.PI);
             ctx.stroke();
@@ -57,6 +31,7 @@ const SatelliteSight = ({ azimuth, elevation, satelliteName }) => {
             ctx.beginPath();
             ctx.arc(centerX, centerY, width / 6.6, 0, 2 * Math.PI);
             ctx.stroke();
+            // Draw lines
             ctx.beginPath();
             ctx.moveTo(centerX, offset);
             ctx.lineTo(centerX, height - offset);
@@ -65,6 +40,7 @@ const SatelliteSight = ({ azimuth, elevation, satelliteName }) => {
             ctx.moveTo(15, centerY);
             ctx.lineTo(width - offset, centerY);
             ctx.stroke();
+            // Draw N/S/E/W
             ctx.fillStyle = '#00000099';
             ctx.beginPath();
             ctx.fillText('N', centerX - 4, offset - 5);
@@ -74,20 +50,19 @@ const SatelliteSight = ({ azimuth, elevation, satelliteName }) => {
             ctx.fillText('E', width - offset + 5, centerY + 4);
             ctx.beginPath();
             ctx.fillText('W', 0, centerY + 4);
+            // Draw satellite position
             ctx.fillStyle = '#FF5500';
             ctx.beginPath();
             ctx.arc(x, y, 5, 0, 2 * Math.PI);
             ctx.fill();
-            ctx.beginPath();
-            ctx.fillText(satelliteName, x, y + 20);
-    }, [azimuth, elevation, satelliteName]);
+    }, [azimuth, elevation]);
 
     useEffect(() => {
         if(canvasRef.current)
         {
             draw(canvasRef.current);
         }
-    }, [canvasRef, azimuth, elevation, draw]);
+    }, [canvasRef, draw]);
 
     return (
         <div className="w-100 text-center">
@@ -96,10 +71,9 @@ const SatelliteSight = ({ azimuth, elevation, satelliteName }) => {
     );
 };
 
-SatelliteSight.propTypes = {
+PolarView.propTypes = {
     azimuth: PropTypes.number.isRequired,
     elevation: PropTypes.number.isRequired,
-    satelliteName: PropTypes.string.isRequired
 }
 
-export default SatelliteSight;
+export default PolarView;

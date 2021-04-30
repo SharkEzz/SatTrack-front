@@ -1,10 +1,10 @@
-import SatellitesView from './SatellitesView';
-import TopNavbar from './TopNavbar';
+import SatellitesTable from './SatellitesTable';
+import TopNavbar from './UIComponents/TopNavbar';
 import TrackingForm from './TrackingForm';
 import TrackingView from './TrackingView';
 
 export {
-    SatellitesView,
+    SatellitesTable,
     TopNavbar,
     TrackingView,
     TrackingForm

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, Button, Table, Modal, FormControl, Badge } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-const SatellitesView = ({ satellites, editSatellite, deleteSatellite, addSatellite }) => {
+const SatellitesTables = ({ satellites, editSatellite, deleteSatellite, addSatellite }) => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
 
@@ -74,11 +74,11 @@ const SatellitesView = ({ satellites, editSatellite, deleteSatellite, addSatelli
   )
 };
 
-SatellitesView.propTypes = {
+SatellitesTables.propTypes = {
   satellites: PropTypes.array.isRequired,
   editSatellite: PropTypes.func.isRequired,
   deleteSatellite: PropTypes.func.isRequired,
   addSatellite: PropTypes.func.isRequired
 }
 
-export default SatellitesView;
+export default SatellitesTables;
