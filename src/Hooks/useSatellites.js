@@ -5,12 +5,10 @@ const useSatellites = () => {
     const [currentTracking, setCurrentTracking] = useState();
     const [satellites, setSatellites] = useState([]);
     const [visibleSatellites, setVisibleSatellites] = useState([]);
-    const [currentLocation, setCurrentLocation] = useState();
     const [savedLocation, setSavedLocation] = useState();
-    const [isLoaded, setIsLoaded] = useState(false);
 
     const editSavedLocation = useCallback(({lat, lng, alt}) => {
-        return fetchSatellites.setCurrentSelectedPosition({lat, lng, alt}).then((res) => {
+        return fetchSatellites.setCurrentSelectedPosition({lat, lng, alt}).then(() => {
             setSavedLocation({lat, lng, alt});
         }).catch(() => {
             throw new Error('Cannot set current location');
@@ -43,7 +41,7 @@ const useSatellites = () => {
         return fetchSatellites.deleteSatellite(id)
             .then(() => {
                 setSatellites((satellites) => satellites.filter((sat) => sat.id !== id));
-            }).catch((e) => {
+            }).catch(() => {
                 throw new Error('Cannot delete this satellite');
             });
     }, []);
@@ -57,18 +55,6 @@ const useSatellites = () => {
             .catch(() => {
                 throw new Error("An error as occured !")
             })
-    }, []);
-
-    const getUserGeolocation = useCallback((setFieldValue) => {
-        navigator.geolocation.getCurrentPosition((pos) => {
-            const { coords } = pos;
-            setCurrentLocation({
-                lat: coords.latitude.toFixed(4),
-                lng: coords.longitude.toFixed(4)
-            });
-            setFieldValue('lat', coords.latitude.toFixed(4));
-            setFieldValue('lng', coords.longitude.toFixed(4));
-        });
     }, []);
 
     const saveLocation = useCallback(({ lat, lng, elev }) => {
@@ -108,46 +94,38 @@ const useSatellites = () => {
             await refreshVisibleSatellites();
             await refreshSelectedPosition();
             await refreshCurrentTracking();
-            setIsLoaded(true);
         })()
     }, [
         refreshSatellites,
         refreshCurrentTracking,
         refreshSelectedPosition,
         refreshVisibleSatellites,
-        setIsLoaded
     ]);
 
     return useMemo(() => ({
-        currentLocation,
         currentTracking,
         visibleSatellites,
         savedLocation,
-        isLoaded,
-        getUserGeolocation,
+        satellites,
         saveLocation,
         refreshVisibleSatellites,
         refreshSelectedPosition,
         refreshCurrentTracking,
         editTracking,
         editCurrentTracking,
-        satellites,
         editSatellite,
         deleteSatellite,
         addSatellite
-    }), [currentLocation,
-        currentTracking,
-        getUserGeolocation,
-        isLoaded,
+    }), [currentTracking,
+        visibleSatellites,
+        savedLocation,
+        satellites,
         refreshCurrentTracking,
         refreshSelectedPosition,
         refreshVisibleSatellites,
-        visibleSatellites,
         saveLocation,
-        savedLocation,
         editTracking,
         editCurrentTracking,
-        satellites,
         editSatellite,
         deleteSatellite,
         addSatellite

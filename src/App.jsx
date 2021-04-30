@@ -12,9 +12,9 @@ function App() {
     currentTracking,
     visibleSatellites,
     satellites,
+    savedLocation,
 
     // Methods
-    getUserGeolocation,
     refreshVisibleSatellites,
     refreshCurrentTracking,
     editTracking,
@@ -52,10 +52,10 @@ function App() {
       <Container className="mt-3">
         <Row md={12}>
           <Col>
-            <TrackingForm 
+            <TrackingForm
+              savedLocation={savedLocation ?? null}
               satellites={visibleSatellites} 
               isTracking={Boolean(currentTracking)}
-              getUserGeolocation={getUserGeolocation}
               onStopTracking={() => editCurrentTracking(null)}
               onSubmit={editTracking}
               />
