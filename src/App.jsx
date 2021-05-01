@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container, Row, Col, Button, Badge, Modal,
+  Container, Row, Col, Button, Badge, Modal, ModalFooter,
 } from 'react-bootstrap';
 import {
   LocationForm,
@@ -53,12 +53,12 @@ function App() {
         <Modal.Header closeButton>
           <Modal.Title>Edit current location</Modal.Title>
         </Modal.Header>
-        <Modal.Body>location</Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary">
-            Save Changes
-          </Button>
-        </Modal.Footer>
+        <LocationForm
+          currentLocation={currentLocation}
+          setCurrentLocation={setCurrentLocation}
+          BodyWrapper={Modal.Body}
+          FooterWrapper={Modal.Footer}
+        />
       </Modal>
 
       <Modal show={serverInfosModalOpened} onHide={() => setServerInfosModalOpened(false)}>
@@ -71,16 +71,8 @@ function App() {
           setIsConnected={setIsConnected}
           setServerInfos={setServerInfos}
           modalOpened={setServerInfosModalOpened}
-          BodyWrapper={({ children }) => (
-            <Modal.Body>
-              {children}
-            </Modal.Body>
-          )}
-          FooterWrapper={({ children }) => (
-            <Modal.Footer>
-              {children}
-            </Modal.Footer>
-          )}
+          BodyWrapper={Modal.Body}
+          FooterWrapper={Modal.Footer}
         />
       </Modal>
     </>

@@ -86,8 +86,10 @@ ConnectForm.propTypes = {
   setServerInfos: PropTypes.func.isRequired,
   setIsConnected: PropTypes.func.isRequired,
   modalOpened: PropTypes.func.isRequired,
-  BodyWrapper: PropTypes.func.isRequired,
-  FooterWrapper: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  BodyWrapper: PropTypes.object.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  FooterWrapper: PropTypes.object.isRequired,
 };
 
 export default ConnectForm;
