@@ -31,12 +31,10 @@ function App() {
           </Col>
         </Row>
         <Row className="mb-3">
-          <Col>
+          <Col md={5} sm={12}>
             <TrackingView />
           </Col>
-        </Row>
-        <Row>
-          <Col>
+          <Col md={7} sm={12}>
             <SatellitesTable />
           </Col>
         </Row>
