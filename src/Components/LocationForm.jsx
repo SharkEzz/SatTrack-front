@@ -1,9 +1,7 @@
 import React from 'react';
 
-const LocationForm = () => {
-    return (
-        <p>locationform</p>
-    );
-};
+const LocationForm = () => (
+  <p>locationform</p>
+);
 
 export default LocationForm;

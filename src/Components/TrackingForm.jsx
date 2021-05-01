@@ -30,11 +30,10 @@ const TrackingForm = ({ isTracking }) => {
               render={({ field }) => (
                 <>
                   <Form.Control
-                    name="selectSat"
                     as="select"
                     required
-                    // eslint-disable-next-line react/jsx-props-no-spreading
                     {...field}
+                    isInvalid={errors.satSelect}
                   >
                     <option value="0">&nbsp;</option>
                     <option value="1">Sat1</option>
@@ -43,7 +42,7 @@ const TrackingForm = ({ isTracking }) => {
                 </>
               )}
             />
-            {errors.satSelect && <Form.Text className="text-danger">Error: please select a satellite</Form.Text>}
+            {errors.satSelect && <Form.Control.Feedback type="invalid">Error: please select a satellite</Form.Control.Feedback>}
 
           </Form.Group>
         </Card.Body>
