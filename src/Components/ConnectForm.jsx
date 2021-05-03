@@ -1,76 +1,55 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Button, Badge } from 'react-bootstrap';
 import { useForm, Controller } from 'react-hook-form';
 
 const ConnectForm = ({
-  isConnected, serverInfos, setServerInfos, setIsConnected, modalOpened, BodyWrapper, FooterWrapper,
+  isConnected, serverAddress, connect, disconnect, BodyWrapper, FooterWrapper,
 }) => {
   const { handleSubmit, control, formState: { errors } } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
-    // TODO
-  };
+  const onSubmit = useCallback((data) => {
+    connect(data.serverAddress);
+  }, [connect]);
+
+  const onDisconnect = useCallback(() => {
+    disconnect();
+  }, [disconnect]);
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <BodyWrapper>
         <div className="mb-3 d-flex justify-content-between align-items-center">
           <span>Current status:</span>
-          <Badge variant="danger">Disconnected</Badge>
+          <Badge variant={isConnected ? 'success' : 'danger'}>{isConnected ? 'Connected' : 'Disconnected'}</Badge>
         </div>
         <hr />
         <Form.Group>
-          <Form.Label htmlFor="serverIP">Server IP</Form.Label>
+          <Form.Label htmlFor="serverAddress">Websocket server address</Form.Label>
           <Controller
-            name="serverIP"
+            name="serverAddress"
             control={control}
+            defaultValue={serverAddress}
             rules={{
               required: true,
-              pattern: /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
+              // TODO: validation
             }}
             render={({ field }) => (
               <Form.Control
                 type="text"
-                id="serverIP"
-                placeholder="127.0.0.1"
+                id="serverAddress"
+                placeholder="ws://127.0.0.1:8080"
                 required
                 {...field}
-                isInvalid={errors.serverIP}
+                isInvalid={errors.serverAddress}
               />
             )}
           />
-          {errors.serverIP && <Form.Control.Feedback type="invalid">Error: invalid server IP</Form.Control.Feedback>}
-        </Form.Group>
-        <Form.Group>
-          <Form.Label htmlFor="serverPort">Server port</Form.Label>
-          <Controller
-            name="serverPort"
-            control={control}
-            rules={{
-              required: true,
-              min: 0,
-              max: 65536,
-            }}
-            render={({ field }) => (
-              <Form.Control
-                type="number"
-                min="0"
-                max="65536"
-                id="serverPort"
-                placeholder="8080"
-                {...field}
-                isInvalid={errors.serverPort}
-              />
-            )}
-          />
-          {errors.serverPort && <Form.Control.Feedback type="invalid">Error: invalid server port</Form.Control.Feedback>}
+          {errors.serverAddress && <Form.Control.Feedback type="invalid">Error: invalid server address</Form.Control.Feedback>}
         </Form.Group>
       </BodyWrapper>
       <FooterWrapper>
-        <Button type="button" variant="secondary" onClick={() => modalOpened(false)}>Close</Button>
-        {isConnected ? <Button type="button" variant="danger">Disconnect</Button>
+        {isConnected ? <Button type="button" variant="danger" onClick={onDisconnect}>Disconnect</Button>
           : <Button type="submit" variant="success">Connect</Button>}
       </FooterWrapper>
     </Form>
@@ -79,17 +58,17 @@ const ConnectForm = ({
 
 ConnectForm.propTypes = {
   isConnected: PropTypes.bool.isRequired,
-  serverInfos: PropTypes.shape({
-    ip: PropTypes.string,
-    port: PropTypes.string,
-  }).isRequired,
-  setServerInfos: PropTypes.func.isRequired,
-  setIsConnected: PropTypes.func.isRequired,
-  modalOpened: PropTypes.func.isRequired,
+  serverAddress: PropTypes.string,
+  connect: PropTypes.func.isRequired,
+  disconnect: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   BodyWrapper: PropTypes.object.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   FooterWrapper: PropTypes.object.isRequired,
+};
+
+ConnectForm.defaultProps = {
+  serverAddress: undefined,
 };
 
 export default ConnectForm;
