@@ -11,14 +11,14 @@ import PolarView from './UI/PolarView';
 const TrackingView = ({ trackedSatellite }) => {
   const getBadgeColorByElevation = useCallback((elevation) => {
     switch (true) {
-      case elevation < 15:
+      case elevation < 20:
         return 'danger';
-      case elevation < 30:
+      case elevation < 35:
         return 'warning';
-      case elevation >= 30:
-        return 'primary';
-      default:
+      case elevation >= 35:
         return 'success';
+      default:
+        return 'primary';
     }
   }, []);
 
@@ -26,7 +26,7 @@ const TrackingView = ({ trackedSatellite }) => {
     <Card>
       <Card.Header>
         Current tracking:&nbsp;
-        <Badge variant="dark">{trackedSatellite ? trackedSatellite.name : 'None'}</Badge>
+        <Badge variant="dark">{trackedSatellite?.name ?? 'None'}</Badge>
       </Card.Header>
       <Card.Body className="text-center">
         {trackedSatellite
