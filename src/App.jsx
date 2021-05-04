@@ -10,6 +10,7 @@ import {
   TopNavbar,
   ConnectForm,
 } from './Components';
+import useCurrentTracking from './Hooks/useCurrentTracking';
 import useLocation from './Hooks/useLocation';
 import useWs from './Hooks/useWs';
 
@@ -18,10 +19,12 @@ function App() {
     isConnected,
     serverAddress,
     latestMessage,
+    restServerAddress,
     connect,
     disconnect,
   } = useWs();
-  const { currentLocation, setCurrentLocation } = useLocation();
+  const { currentLocation, setLocation } = useLocation(latestMessage?.location, restServerAddress);
+  const { updateTracking, deleteTracking } = useCurrentTracking(restServerAddress);
   const [locationModalOpened, setLocationModalOpened] = useState(false);
   const [serverInfosModalOpened, setServerInfosModalOpened] = useState(false);
 
@@ -42,7 +45,12 @@ function App() {
         </Row>
         <Row className="mb-3">
           <Col>
-            <TrackingForm satellites={latestMessage.satellites} />
+            <TrackingForm
+              isTracking={Boolean(latestMessage?.trackedSatellite)}
+              updateTracking={updateTracking}
+              deleteTracking={deleteTracking}
+              satellites={latestMessage.satellites}
+            />
           </Col>
         </Row>
         <Row className="mb-3">
@@ -61,7 +69,7 @@ function App() {
         </Modal.Header>
         <LocationForm
           currentLocation={currentLocation}
-          setCurrentLocation={setCurrentLocation}
+          setCurrentLocation={setLocation}
           BodyWrapper={Modal.Body}
           FooterWrapper={Modal.Footer}
         />

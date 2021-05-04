@@ -15,7 +15,7 @@ const SatellitesTable = ({ satellites }) => (
         </thead>
         <tbody>
           {satellites.map((satellite) => (
-            <tr>
+            <tr key={satellite.id}>
               <td>{satellite.name}</td>
               <td>
                 <Button className="m-1" variant="secondary" size="sm">Edit</Button>

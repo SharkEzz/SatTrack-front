@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import { Form, Button } from 'react-bootstrap';
 import { useForm, Controller } from 'react-hook-form';
 
-const LocationForm = ({ currentLocation, setCurrentLocation, BodyWrapper, FooterWrapper }) => {
+const LocationForm = ({
+  currentLocation, setCurrentLocation, BodyWrapper, FooterWrapper,
+}) => {
   const { control, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = useCallback((data) => {
-    console.log(data);
-    // TODO
-  }, []);
+    setCurrentLocation(data);
+  }, [setCurrentLocation]);
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
@@ -19,6 +20,7 @@ const LocationForm = ({ currentLocation, setCurrentLocation, BodyWrapper, Footer
           <Controller
             name="latitude"
             control={control}
+            defaultValue={currentLocation.latitude}
             rules={{
               required: true,
               min: -90,
@@ -28,6 +30,7 @@ const LocationForm = ({ currentLocation, setCurrentLocation, BodyWrapper, Footer
               <Form.Control
                 id="latitude"
                 type="number"
+                step="0.01"
                 min="-90"
                 max="90"
                 {...field}
@@ -43,6 +46,7 @@ const LocationForm = ({ currentLocation, setCurrentLocation, BodyWrapper, Footer
           <Controller
             name="longitude"
             control={control}
+            defaultValue={currentLocation.longitude}
             rules={{
               required: true,
               min: -180,
@@ -52,6 +56,7 @@ const LocationForm = ({ currentLocation, setCurrentLocation, BodyWrapper, Footer
               <Form.Control
                 id="longitude"
                 type="number"
+                step="0.01"
                 min="-180"
                 max="180"
                 {...field}
@@ -63,10 +68,11 @@ const LocationForm = ({ currentLocation, setCurrentLocation, BodyWrapper, Footer
             && <Form.Control.Feedback type="invalid">Error: Invalid longitude</Form.Control.Feedback>}
         </Form.Group>
         <Form.Group>
-          <Form.Label htmlFor="longitude">Altitude</Form.Label>
+          <Form.Label htmlFor="longitude">Altitude (meters)</Form.Label>
           <Controller
             name="altitude"
             control={control}
+            defaultValue={currentLocation.altitude}
             rules={{
               required: true,
               min: 0,
@@ -99,12 +105,16 @@ LocationForm.propTypes = {
     latitude: PropTypes.number,
     longitude: PropTypes.number,
     altitude: PropTypes.number,
-  }).isRequired,
+  }),
   setCurrentLocation: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   BodyWrapper: PropTypes.object.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   FooterWrapper: PropTypes.object.isRequired,
+};
+
+LocationForm.defaultProps = {
+  currentLocation: {},
 };
 
 export default LocationForm;

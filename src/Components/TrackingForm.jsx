@@ -3,15 +3,20 @@ import { Form, Card, Button } from 'react-bootstrap';
 import { useForm, Controller } from 'react-hook-form';
 import PropTypes from 'prop-types';
 
-const TrackingForm = ({ satellites, isTracking }) => {
+const TrackingForm = ({
+  satellites, isTracking, updateTracking, deleteTracking,
+}) => {
   const {
     control, handleSubmit, formState: { errors },
   } = useForm();
 
   const onSubmit = useCallback((data) => {
-    console.log('track satId: ', data.satSelect);
-    // TODO
-  }, []);
+    updateTracking(data.satSelect);
+  }, [updateTracking]);
+
+  const onStop = useCallback(() => {
+    deleteTracking();
+  }, [deleteTracking]);
 
   return (
     <Card>
@@ -38,7 +43,9 @@ const TrackingForm = ({ satellites, isTracking }) => {
                     <option value="0">&nbsp;</option>
                     {satellites.map((satellite) => {
                       if (satellite.visible) {
-                        return <option value={satellite.id}>{satellite.name}</option>;
+                        return (
+                          <option key={satellite.id} value={satellite.id}>{satellite.name}</option>
+                        );
                       }
                       return null;
                     })}
@@ -50,7 +57,7 @@ const TrackingForm = ({ satellites, isTracking }) => {
           </Form.Group>
         </Card.Body>
         <Card.Footer className="text-center">
-          {!isTracking ? <Button type="submit" variant="success">Start tracking</Button> : <Button variant="danger">Stop tracking</Button>}
+          {!isTracking ? <Button type="submit" variant="success">Start tracking</Button> : <Button type="button" onClick={onStop} variant="danger">Stop tracking</Button>}
         </Card.Footer>
       </Form>
     </Card>
@@ -67,6 +74,8 @@ TrackingForm.propTypes = {
     visible: PropTypes.bool.isRequired,
   })),
   isTracking: PropTypes.bool,
+  updateTracking: PropTypes.func.isRequired,
+  deleteTracking: PropTypes.func.isRequired,
 };
 
 TrackingForm.defaultProps = {

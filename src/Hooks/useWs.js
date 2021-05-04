@@ -1,10 +1,13 @@
-import { useState, useCallback, useMemo } from 'react';
+import {
+  useState, useCallback, useMemo, useRef,
+} from 'react';
 
 const useWs = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [serverAddress, setServerAddress] = useState();
-  const [ws, setWs] = useState();
   const [latestMessage, setLatestMessage] = useState({});
+  const [restServerAddress, setRestServerAddress] = useState();
+  const websocketRef = useRef(null);
 
   const handleMessage = useCallback((event) => {
     setLatestMessage(JSON.parse(event.data));
@@ -16,34 +19,38 @@ const useWs = () => {
 
   const handleClose = useCallback(() => {
     setIsConnected(false);
-    setWs();
+    setRestServerAddress();
   }, []);
 
   const connect = useCallback((address) => {
-    const wsc = new WebSocket(address);
+    websocketRef.current = new WebSocket(address);
+    const { host: restHost } = new URL(address);
+    const restAddress = `http://${restHost}/api`;
 
     setServerAddress(address);
-    setWs(wsc);
+    setRestServerAddress(restAddress);
 
-    wsc.onopen = handleOpen;
-    wsc.onclose = handleClose;
-    wsc.onmessage = handleMessage;
-  }, [handleOpen, handleClose, handleMessage]);
+    websocketRef.current.onopen = handleOpen;
+    websocketRef.current.onclose = handleClose;
+    websocketRef.current.onmessage = handleMessage;
+  }, [handleOpen, handleClose, handleMessage, websocketRef]);
 
   const disconnect = useCallback(() => {
-    ws.close();
-  }, [ws]);
+    websocketRef.current.close();
+  }, [websocketRef]);
 
   return useMemo(() => ({
     serverAddress,
     isConnected,
     latestMessage,
+    restServerAddress,
     connect,
     disconnect,
   }), [
     serverAddress,
     isConnected,
     latestMessage,
+    restServerAddress,
     connect,
     disconnect,
   ]);
