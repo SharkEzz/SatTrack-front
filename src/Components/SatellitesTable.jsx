@@ -8,19 +8,21 @@ const SatellitesTable = ({
   satellites, addSatellite, updateSatellite, deleteSatellite,
 }) => {
   const [editModalOpened, setEditModalOpened] = useState(false);
-  const [tle, setTle] = useState('');
+  const [tleText, setTleText] = useState('');
   const [editSatelliteId, setEditSatelliteId] = useState();
   const [addModalOpened, setAddModalOpened] = useState(false);
 
   // TODO: optimize this
 
+  const trimTle = useCallback((tle) => tle.split('\n').map((tleLine) => tleLine.trim()).join('\n'), []);
+
   const onAddSatellite = useCallback(() => {
-    addSatellite(tle);
-  }, [addSatellite, tle]);
+    addSatellite(trimTle(tleText));
+  }, [addSatellite, tleText, trimTle]);
 
   const onEditSatellite = useCallback(() => {
-    updateSatellite(editSatelliteId, tle);
-  }, [updateSatellite, tle, editSatelliteId]);
+    updateSatellite(editSatelliteId, trimTle(tleText));
+  }, [updateSatellite, tleText, editSatelliteId, trimTle]);
 
   return (
     <>
@@ -47,7 +49,7 @@ const SatellitesTable = ({
                       variant="secondary"
                       size="sm"
                       onClick={() => {
-                        setTle(satellite.tle);
+                        setTleText(satellite.tle);
                         setEditSatelliteId(satellite.id);
                         setEditModalOpened(true);
                       }}
@@ -67,7 +69,7 @@ const SatellitesTable = ({
         <Modal.Header closeButton>Edit satellite</Modal.Header>
         <Modal.Body>
           <h6>TLE</h6>
-          <textarea className="form-control" rows="3" value={tle} onInput={(e) => setTle(e.target.value)} />
+          <textarea className="form-control" rows="3" value={tleText} onInput={(e) => setTleText(e.target.value)} />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="success" onClick={() => onEditSatellite()}>Edit</Button>
@@ -78,10 +80,10 @@ const SatellitesTable = ({
         <Modal.Header closeButton>Add satellite</Modal.Header>
         <Modal.Body>
           <h6>TLE</h6>
-          <textarea className="form-control" rows="3" value={tle} onInput={(e) => setTle(e.target.value)} />
+          <textarea className="form-control" rows="3" value={tleText} onInput={(e) => setTleText(e.target.value)} />
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="success" onClick={() => onAddSatellite(tle)}>Add</Button>
+          <Button variant="success" onClick={() => onAddSatellite(tleText)}>Add</Button>
         </Modal.Footer>
       </Modal>
     </>
