@@ -11,7 +11,7 @@ import PolarView from './UI/PolarView';
 const TrackingView = ({ trackedSatellite }) => {
   const getBadgeColorByElevation = useCallback((elevation) => {
     switch (true) {
-      case elevation < 10:
+      case elevation < 15:
         return 'danger';
       case elevation < 30:
         return 'warning';
@@ -26,7 +26,7 @@ const TrackingView = ({ trackedSatellite }) => {
     <Card>
       <Card.Header>
         Current tracking:&nbsp;
-        <Badge variant="dark">{trackedSatellite.name}</Badge>
+        <Badge variant="dark">{trackedSatellite ? trackedSatellite.name : 'None'}</Badge>
       </Card.Header>
       <Card.Body className="text-center">
         {trackedSatellite

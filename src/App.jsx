@@ -12,6 +12,7 @@ import {
 } from './Components';
 import useCurrentTracking from './Hooks/useCurrentTracking';
 import useLocation from './Hooks/useLocation';
+import useSatellites from './Hooks/useSatellites';
 import useWs from './Hooks/useWs';
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
   } = useWs();
   const { currentLocation, setLocation } = useLocation(latestMessage?.location, restServerAddress);
   const { updateTracking, deleteTracking } = useCurrentTracking(restServerAddress);
+  const { addSatellite, updateSatellite, deleteSatellite } = useSatellites(restServerAddress);
   const [locationModalOpened, setLocationModalOpened] = useState(false);
   const [serverInfosModalOpened, setServerInfosModalOpened] = useState(false);
 
@@ -58,7 +60,12 @@ function App() {
             <TrackingView trackedSatellite={latestMessage.trackedSatellite} />
           </Col>
           <Col md={7} sm={12}>
-            <SatellitesTable satellites={latestMessage.satellites} />
+            <SatellitesTable
+              addSatellite={addSatellite}
+              updateSatellite={updateSatellite}
+              deleteSatellite={deleteSatellite}
+              satellites={latestMessage.satellites}
+            />
           </Col>
         </Row>
       </Container>
